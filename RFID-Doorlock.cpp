@@ -390,8 +390,10 @@ int tweet(char tweetMsg[TWEETSIZE]){
     twitter.setTimeout(BASETIMEOUT);
     char url[177];
     sprintf(url, "http://fixme.ch/cgi-bin/twitter.pl?%s", tweetMsg);
-    HTTPResult r = twitter.get(url, NULL);
+    
+    HTTPResult r;
     for (trying;success || (trying < HTTPRETRY);++trying) {
+        r = twitter.get(url, NULL);
         if( r == HTTP_OK ){
             printf("Tweet sent with success!\n\r");
             success = 1;
