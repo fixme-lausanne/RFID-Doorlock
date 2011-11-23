@@ -406,11 +406,9 @@ int tweet(char tweetMsg[TWEETSIZE]){
 int setupNetwork() {
     int result = 1;
     printf("Init\n\r");
-    IpAddr ip = eth.getIp();
-    if(ip.isNull()){
+    if(eth.getIp().isNull()){
         printf("Setting up...\n\r");
-        EthernetErr ethErr = eth.setup(30000);
-        if(ethErr){
+        if(eth.setup(20000) == ETH_TIMEOUT){
             printf("Error %d in setup.\n\r", ethErr);
             result = 0;
         }
