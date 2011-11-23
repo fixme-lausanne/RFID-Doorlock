@@ -59,9 +59,9 @@ int giveResult(int statut);
 int openDoor(int statut);
 int logAttempt(char tag[TAGMAX], int valid);
 int addTag(char tag[TAGMAX]);
-int printTags(char tags[CARTESMAX][TAGMAX], int nbTags);
+void printTags(char tags[CARTESMAX][TAGMAX], int nbTags);
 void dispDigit(int i);
-int tweet(char tweetMsg[141]);
+int tweet(char tweetMsg[TWEETSIZE]);
 int setupNetwork();
 
 int main() {
@@ -76,7 +76,7 @@ int main() {
     //variables
     char tags[CARTESMAX][TAGMAX];
     char buffer[TAGMAX];
-    char tweetMsg[20];
+    char tweetMsg[TWEETSIZE];
     int valid = 0;
     int master = 0;
     int nbTags, hours, statusMove;
@@ -270,16 +270,15 @@ int addTag(char tag[TAGMAX]){
         fputs (ligne, fichier);
         fclose (fichier);
         result = 1;
-        printf("ADDED %s ON DB.txt\n\r",ligne);
+        printf("Added %s on db.txt\n\r",ligne);
     }
     return result;
 }
-int printTags(char tags[CARTESMAX][TAGMAX], int nbTags){
+void printTags(char tags[CARTESMAX][TAGMAX], int nbTags){
     printf("List of cards allowed:\n\r");
     for(int i=0;i<nbTags;i++){
         printf("%s\n\r",tags[i]);
     }
-    return NULL;
 }
 
 void dispDigit(int i){
@@ -385,19 +384,18 @@ void dispDigit(int i){
 
 int tweet(char tweetMsg[TWEETSIZE]){
     int success = 0;
-    int trying = 0;
     HTTPClient twitter;
     twitter.setTimeout(BASETIMEOUT);
     char url[177];
     sprintf(url, "http://fixme.ch/cgi-bin/twitter.pl?%s", tweetMsg);
     
     HTTPResult r;
-    for (trying;success || (trying < HTTPRETRY);++trying) {
+    for (int trying = 0; !success && (trying < HTTPRETRY);++trying) {
         r = twitter.get(url, NULL);
-        if( r == HTTP_OK ){
+        if( r == HTTP_OK ) {
             printf("Tweet sent with success!\n\r");
             success = 1;
-        }else {
+        } else {
             printf("Problem during tweeting, return code %d\n", r);
             success = 0;
         }
@@ -405,7 +403,7 @@ int tweet(char tweetMsg[TWEETSIZE]){
     return success;
 }
 
-int setupNetwork(){
+int setupNetwork() {
     int result = 1;
     printf("Init\n\r");
     IpAddr ip = eth.getIp();
