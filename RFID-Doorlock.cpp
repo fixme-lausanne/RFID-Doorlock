@@ -323,9 +323,9 @@ void dispDigit(int i){
             seg9 = 0;
             break;
     case 6: seg1 = 0;
-            seg2 = 1;
+            seg2 = 0;
             seg4 = 0;
-            seg6 = 0;
+            seg6 = 1;
             seg7 = 0;
             seg8 = 0;
             seg9 = 0;
