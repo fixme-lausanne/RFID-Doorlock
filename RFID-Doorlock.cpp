@@ -11,6 +11,7 @@
 #define MASTER "XXXXXXXXXX"
 #define LOGLINEMAX 50
 #define TWEETSIZE 141
+#define HTTPRETRY 3
 
 LocalFileSystem local("local");
 //RFID data & enable
@@ -383,16 +384,19 @@ void dispDigit(int i){
 
 int tweet(char tweetMsg[TWEETSIZE]){
     int success = 0;
+    int trying = 0;
     HTTPClient twitter;
     char url[177];
     sprintf(url, "http://fixme.ch/cgi-bin/twitter.pl?%s", tweetMsg);
     HTTPResult r = twitter.get(url, NULL);
-    if( r == HTTP_OK ){
-        printf("Tweet sent with success!\n\r");
-        success = 1;
-    }else{
-        printf("Problem during tweeting, return code %d\n", r);
-        success = 0;
+    for (trying;success || (trying < HTTPRETRY);++trying) {
+        if( r == HTTP_OK ){
+            printf("Tweet sent with success!\n\r");
+            success = 1;
+        } else {
+            printf("Problem during tweeting, return code %d\n", r);
+            success = 0;
+        }
     }
     return success;
 }
