@@ -10,6 +10,7 @@
 #define TAGMAX 15
 #define MASTER "XXXXXXXXXX"
 #define LOGLINEMAX 50
+#define TWEETSIZE 141
 
 LocalFileSystem local("local");
 //RFID data & enable
@@ -58,7 +59,7 @@ int logAttempt(char tag[TAGMAX], int valid);
 int addTag(char tag[TAGMAX]);
 int printTags(char tags[CARTESMAX][TAGMAX], int nbTags);
 void dispDigit(int i);
-int tweet(char tweetMsg[20]);
+int tweet(char tweetMsg[141]);
 int setupNetwork();
 
 int main() {
@@ -92,13 +93,13 @@ int main() {
         redLed = 0;
         enable = 0;
     } else {
-        printf("READ DB NOK\n\r");
-        while(1){
+        printf("READ DB NOT OK\n\r");
+        while(1) {
                 errorLed = !errorLed;
                 wait(0.5);
         }
     }
-    if (status){
+    if (status) {
         hours = 1;
     } else {
         hours = 42;
@@ -112,7 +113,7 @@ int main() {
             rfidIn.scanf("%s", buffer);
             if(strcmp (buffer,MASTER) == 0){
                 master = 1;
-            }else{
+            } else {
                 valid = checkTag(tags, buffer, nbTags);
                 logAttempt(buffer, valid);
                 printf("%s", buffer);
@@ -126,7 +127,7 @@ int main() {
             wait(3);
             printf("Scan new card now!\n\r");
             enable = 0;
-            while(1){
+            while(1) { //issue if card is not readable
                 if (rfidIn.readable()){
                     enable = 1;
                     rfidIn.scanf("%s", buffer);
@@ -380,12 +381,12 @@ void dispDigit(int i){
     }
 }
 
-int tweet(char tweetMsg[20]){
+int tweet(char tweetMsg[TWEETSIZE]){
     int success = 0;
     HTTPClient twitter;
-    char url[200];
-    sprintf(url, "http://fixme.ch/cgi-bin/twitter.pl?%s",tweetMsg);
-    HTTPResult r = twitter.get(url, NULL); 
+    char url[300];
+    sprintf(url, "http://fixme.ch/cgi-bin/twitter.pl?%s", tweetMsg);
+    HTTPResult r = twitter.get(url, NULL);
     if( r == HTTP_OK ){
         printf("Tweet sent with success!\n\r");
         success = 1;
@@ -397,8 +398,8 @@ int tweet(char tweetMsg[20]){
 }
 
 int setupNetwork(){
-int result = 1;
-printf("Init\n\r");
+    int result = 1;
+    printf("Init\n\r");
     IpAddr ip = eth.getIp();
     if(ip.isNull()){
         printf("Setting up...\n\r");
