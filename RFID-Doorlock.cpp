@@ -12,6 +12,7 @@
 #define LOGLINEMAX 50
 #define TWEETSIZE 141
 #define HTTPRETRY 3
+#define BASETIMEOUT 4000
 
 LocalFileSystem local("local");
 //RFID data & enable
@@ -386,6 +387,7 @@ int tweet(char tweetMsg[TWEETSIZE]){
     int success = 0;
     int trying = 0;
     HTTPClient twitter;
+    twitter.setTimeout(BASETIMEOUT);
     char url[177];
     sprintf(url, "http://fixme.ch/cgi-bin/twitter.pl?%s", tweetMsg);
     HTTPResult r = twitter.get(url, NULL);
@@ -393,7 +395,7 @@ int tweet(char tweetMsg[TWEETSIZE]){
         if( r == HTTP_OK ){
             printf("Tweet sent with success!\n\r");
             success = 1;
-        } else {
+        }else {
             printf("Problem during tweeting, return code %d\n", r);
             success = 0;
         }
