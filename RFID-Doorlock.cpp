@@ -183,13 +183,13 @@ int main() {
 
 
 //FUNCTIONS
-int readDB(char tags[CARTESMAX][TAGMAX]){
+int readDB(char tags[CARTESMAX][TAGMAX]) {
     FILE *fichier;
     int i;
     int result = 0;
     char ligne[TAGMAX];
     fichier = fopen(DBNAME,"r");
-    if ( fichier != NULL) {
+    if (fichier != NULL) {
         i=0;
         fgets (ligne, TAGMAX, fichier);
         while (!feof(fichier)) {
@@ -199,12 +199,12 @@ int readDB(char tags[CARTESMAX][TAGMAX]){
         }
         result = i;
         fclose (fichier);
-
+        
     }
     return result;
 }
 
-int checkTag(char tags[CARTESMAX][TAGMAX], char tag[TAGMAX], int nbTags){
+int checkTag(char tags[CARTESMAX][TAGMAX], char tag[TAGMAX], int nbTags) {
     int valid = 0;
     int i;
     for (i=0;i<nbTags;i++){
@@ -233,13 +233,13 @@ int giveResult(int statut){
 
 int openDoor(int statut){
     if (statut == 1){
-        a=0;
+        a = 0;
         wait(0.5);
-        a=1;
+        a = 1;
         wait(5);
-        b=0;
+        b = 0;
         wait(0.5);
-        b=1;
+        b = 1;
     }
     return 0;
 }
@@ -248,12 +248,12 @@ int logAttempt(char tag[TAGMAX], int valid){
     FILE *fichier;
     char ligne[LOGLINEMAX];
     fichier = fopen(LOG, "a");
-    if ( fichier == NULL) {
+    if (fichier == NULL) {
         printf("cant find %s\n\r",LOG);
     } else {
         sprintf(ligne, "%s >>> %i\n", tag, valid);
-        fputs (ligne, fichier);
-        fclose (fichier);
+        fputs(ligne, fichier);
+        fclose(fichier);
     }
     return NULL;
 }
@@ -408,7 +408,10 @@ int setupNetwork() {
     printf("Init\n\r");
     if(eth.getIp().isNull()){
         printf("Setting up...\n\r");
-        if(eth.setup(20000) == ETH_TIMEOUT){
+        //the eth.setup without parameter can be called, the timout will
+        //be automatically set.
+        //see : http://mbed.org/cookbook/Ethernet
+        if(eth.setup() == ETH_TIMEOUT){
             printf("Error %d in setup.\n\r", ethErr);
             result = 0;
         }
@@ -416,3 +419,5 @@ int setupNetwork() {
     
     return result;
 }
+
+
