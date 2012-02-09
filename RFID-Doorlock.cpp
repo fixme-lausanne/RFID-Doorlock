@@ -4,6 +4,7 @@
 #include "HTTPClient.h"
 #include "NTPClient.h"
 #include <string>
+
 #define DBNAME "/local/db.txt"
 #define LOG "/local/logs.txt"
 #define CARTESMAX 20
@@ -15,12 +16,15 @@
 #define BASETIMEOUT 4000
 
 LocalFileSystem local("local");
+
 //RFID data & enable
 Serial rfidIn(p9,p10);
 DigitalOut enable(p11);
+
 //H-Bridge controllers
 DigitalOut a(p26);
 DigitalOut b(p29);
+
 //MBED Leds
 DigitalOut readyLed(LED1);
 DigitalOut greenLed(p23);
@@ -28,7 +32,9 @@ DigitalOut redLed(p22);
 DigitalOut statusLed(LED2);
 DigitalOut errorLed(LED4);
 
+
 /*
+ * 
         1
       2   6
         7
@@ -205,14 +211,12 @@ int readDB(char tags[CARTESMAX][TAGMAX]) {
 }
 
 int checkTag(char tags[CARTESMAX][TAGMAX], char tag[TAGMAX], int nbTags) {
-    int valid = 0;
-    int i;
-    for (i=0;i<nbTags;i++){
-        if (strcmp (tag,tags[i]) == 0){
-            valid = 1;
+    for (int i = 0;i < nbTags;++i){
+        if (strcmp(tag, tags[i]) == 0) {
+            return 1;
         }
     }
-    return valid;
+    return 0;
 }
 
 int giveResult(int statut){
@@ -262,21 +266,22 @@ int addTag(char tag[TAGMAX]){
     FILE *fichier;
     char ligne[TAGMAX];
     int result = 0;
-    fichier = fopen(DBNAME,"a");
-    if ( fichier == NULL) {
-        printf("cant find %s\n\r",DBNAME);
-    }else {
+    fichier = fopen(DBNAME, "a");
+    if (fichier != NULL) {
         sprintf(ligne, "%s\n", tag);
-        fputs (ligne, fichier);
-        fclose (fichier);
+        fputs(ligne, fichier);
+        fclose(fichier);
         result = 1;
         printf("Added %s on db.txt\n\r",ligne);
+    } else {
+         printf("cant find %s\n\r",DBNAME);
     }
     return result;
 }
+
 void printTags(char tags[CARTESMAX][TAGMAX], int nbTags){
     printf("List of cards allowed:\n\r");
-    for(int i=0;i<nbTags;i++){
+    for(int i = 0;i < nbTags;++i){
         printf("%s\n\r",tags[i]);
     }
 }
