@@ -183,7 +183,7 @@ int main() {
             }
             setupNetwork();
             giveResult(tweet(tweetMsg));
-        }              
+        }
     }
 }
 
