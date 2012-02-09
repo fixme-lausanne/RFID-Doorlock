@@ -199,9 +199,9 @@ int readDB(char tags[CARTESMAX][TAGMAX]) {
         i=0;
         fgets (ligne, TAGMAX, fichier);
         while (!feof(fichier)) {
-            sscanf (ligne, "%s", tags[i]);
+            sscanf(ligne, "%s", tags[i]);
             i++;
-            fgets (ligne, TAGMAX, fichier);
+            fgets(ligne, TAGMAX, fichier);
         }
         result = i;
         fclose (fichier);
@@ -249,15 +249,15 @@ int openDoor(int statut){
 }
 
 int logAttempt(char tag[TAGMAX], int valid){
-    FILE *fichier;
+    FILE *file;
     char ligne[LOGLINEMAX];
-    fichier = fopen(LOG, "a");
-    if (fichier == NULL) {
-        printf("cant find %s\n\r",LOG);
-    } else {
+    file = fopen(LOG, "a");
+    if (file != NULL) {
         sprintf(ligne, "%s >>> %i\n", tag, valid);
         fputs(ligne, fichier);
         fclose(fichier);
+    } else {
+        printf("cant find %s\n\r", LOG);
     }
     return NULL;
 }
@@ -387,7 +387,7 @@ void dispDigit(int i){
     }
 }
 
-int tweet(char tweetMsg[TWEETSIZE]){
+int tweet(char tweetMsg[TWEETSIZE]) {
     int success = 0;
     HTTPClient twitter;
     twitter.setTimeout(BASETIMEOUT);
