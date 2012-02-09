@@ -12,6 +12,6 @@ This code is supposed tu be compiled with the Mbed online compiler (www.mbed.org
 
 DEPENDENCIES
 -----------
-*EthernetNetIf Library (mbed.org)
-*HTTPClient Library (mbed.org)
-*mbed Library (mbed.org)
+* EthernetNetIf Library (mbed.org)
+* HTTPClient Library (mbed.org)
+* mbed Library (mbed.org)
