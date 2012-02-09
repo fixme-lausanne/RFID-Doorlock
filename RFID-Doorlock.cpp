@@ -63,12 +63,13 @@ int readDB(char tags[CARTESMAX][TAGMAX]);
 int checkTag(char tags[CARTESMAX][TAGMAX], char tag[TAGMAX], int nbTags);
 int giveResult(int statut);
 int openDoor(int statut);
-int logAttempt(char tag[TAGMAX], int valid);
+int loginAttempt(char tag[TAGMAX], int valid);
 int addTag(char tag[TAGMAX]);
 void printTags(char tags[CARTESMAX][TAGMAX], int nbTags);
 void dispDigit(int i);
 int tweet(char tweetMsg[TWEETSIZE]);
 int setupNetwork();
+int log(char *msg);
 
 int main() {
     //INIT
@@ -123,7 +124,7 @@ int main() {
                 master = 1;
             } else {
                 valid = checkTag(tags, buffer, nbTags);
-                logAttempt(buffer, valid);
+                loginAttempt(buffer, valid);
                 printf("%s", buffer);
                 printf("   >>> %d\n\r", valid);
                 giveResult(valid);
@@ -248,17 +249,12 @@ int openDoor(int statut){
     return 0;
 }
 
-int logAttempt(char tag[TAGMAX], int valid){
+int loginAttempt(char tag[TAGMAX], int valid){
     FILE *file;
     char ligne[LOGLINEMAX];
     file = fopen(LOG, "a");
-    if (file != NULL) {
-        sprintf(ligne, "%s >>> %i\n", tag, valid);
-        fputs(ligne, fichier);
-        fclose(fichier);
-    } else {
-        printf("cant find %s\n\r", LOG);
-    }
+    sprintf(ligne, "%s >>> %i\n", tag, valid);
+    log(ligne)
     return NULL;
 }
 
@@ -274,7 +270,7 @@ int addTag(char tag[TAGMAX]){
         result = 1;
         printf("Added %s on db.txt\n\r",ligne);
     } else {
-         printf("cant find %s\n\r",DBNAME);
+        printf("cant find %s\n\r",DBNAME);
     }
     return result;
 }
@@ -425,4 +421,14 @@ int setupNetwork() {
     return result;
 }
 
+int log(char *msg) {
+    FILE f = fopen(LOG, "a");
+    if (f != NULL) {
+        fputs(msg, f)
+        fclose(f)
+        return 1;
+    else {
+        return 0;
+    }
+}
 
